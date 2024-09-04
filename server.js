@@ -1,4 +1,4 @@
-require('dotenv').config();
+/*require('dotenv').config();
 
 require('./models/User');
 require('./models/Building');
@@ -39,3 +39,37 @@ app.get('/', (req, res) => res.send('API Running'));
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+*/
+
+const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const userRoutes = require('./routes/user');
+const buildingRoutes = require('./routes/building');
+const liftRoutes = require('./routes/lift');
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 8080;
+
+// Middleware
+app.use(express.json());
+
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/buildings', buildingRoutes);
+app.use('/api/lifts', liftRoutes);
+
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => {
+    console.log('MongoDB connected');
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+})
+.catch(err => console.log(err));
+

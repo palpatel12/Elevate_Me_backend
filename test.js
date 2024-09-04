@@ -1,3 +1,4 @@
+//file to test building model
 require('dotenv').config();
 
 const mongoose = require('mongoose');
